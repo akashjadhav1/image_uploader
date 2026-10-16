@@ -11,7 +11,11 @@ type UploadedImage = {
   previewUrl: string;
 };
 
-function Home() {
+type HomeProps = {
+  onNavigate?: (page: 'login' | 'register' | 'home') => void;
+};
+
+function Home({ onNavigate }: HomeProps) {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('theme');
     if (saved) return saved === 'dark';
@@ -133,6 +137,14 @@ function Home() {
                 <path d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z' />
               </svg>
             )}
+          </button>
+
+          <button
+            type='button'
+            onClick={() => onNavigate?.('login')}
+            className='clay-btn px-4 py-2 text-sm font-semibold text-[var(--clay-text-muted)] transition-colors hover:text-[var(--clay-danger)]'
+          >
+            Logout
           </button>
 
           <div className='flex cursor-pointer items-center gap-3'>

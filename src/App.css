@@ -233,6 +233,36 @@ body {
     -4px -4px 8px var(--clay-shadow-light);
 }
 
+/* Clay input field */
+.clay-input {
+  background: var(--clay-surface);
+  border: none;
+  border-radius: 14px;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  color: var(--clay-text);
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+  box-shadow:
+    inset 4px 4px 8px var(--clay-inner-dark),
+    inset -4px -4px 8px var(--clay-inner-light);
+  transition: box-shadow 0.2s ease;
+}
+
+.clay-input::placeholder {
+  color: var(--clay-text-muted);
+}
+
+.clay-input:focus {
+  box-shadow:
+    inset 4px 4px 8px var(--clay-inner-dark),
+    inset -4px -4px 8px var(--clay-inner-light),
+    0 0 0 2px var(--clay-primary-light);
+}
+
 /* Clay section heading */
 .clay-heading {
   color: var(--clay-text-muted);
