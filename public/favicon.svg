@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#5b6ce0"/>
+  <!-- Inner shadow for clay effect -->
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <!-- Cloud shape -->
+  <ellipse cx="32" cy="36" rx="16" ry="10" fill="white" opacity="0.95"/>
+  <ellipse cx="26" cy="34" rx="10" ry="9" fill="white" opacity="0.95"/>
+  <ellipse cx="40" cy="34" rx="10" ry="9" fill="white" opacity="0.95"/>
+  <ellipse cx="32" cy="30" rx="10" ry="8" fill="white" opacity="0.95"/>
+  <!-- Upload arrow -->
+  <polygon points="32,20 26,28 38,28" fill="#5b6ce0"/>
+  <rect x="30" y="26" width="4" height="12" rx="2" fill="#5b6ce0"/>
+</svg>
