@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import api from './api';
 
 export type LoginPayload = {
@@ -14,7 +15,7 @@ export type UseLoginResult = {
 };
 
 /**
- * Submits credentials to POST /login and stores the returned token + user
+ * Submits credentials to POST /auth/login and stores the returned token + user
  * in localStorage. Returns { loading, error, login }.
  */
 export function useLogin(): UseLoginResult {
@@ -26,11 +27,12 @@ export function useLogin(): UseLoginResult {
     setError('');
 
     try {
-      const { data } = await api.post('/login', { email, password });
+      const { data } = await api.post('/auth/login', { email, password });
 
       if (data?.token) localStorage.setItem('auth_token', data.token);
       if (data?.user) localStorage.setItem('auth_user', JSON.stringify(data.user));
 
+      toast.success('Login successful!');
       return true;
     } catch (err: unknown) {
       const message =
@@ -40,6 +42,7 @@ export function useLogin(): UseLoginResult {
         (err as any)?.response?.data?.error ??
         'Login failed. Please check your credentials.';
       setError(message);
+      toast.error(message);
       return false;
     } finally {
       setLoading(false);

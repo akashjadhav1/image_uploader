@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useUpload } from '../hooks/useUpload'
 
 type SelectedImage = {
   file: File;
@@ -26,6 +27,7 @@ function Home({ onNavigate }: HomeProps) {
   const [uploaded, setUploaded] = useState<UploadedImage[]>([]);
   const [error, setError] = useState<string>('');
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const { loading: uploading, upload: uploadImage } = useUpload();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<SelectedImage | null>(null);
   imageRef.current = image;
@@ -67,9 +69,11 @@ function Home({ onNavigate }: HomeProps) {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // Move the pending image into the uploaded gallery
-  const handleUpload = () => {
+  // Move the pending image into the uploaded gallery once the API accepts it
+  const handleUpload = async () => {
     if (!image) return;
+    const success = await uploadImage(image.file);
+    if (!success) return;
     setUploaded((prev) => [
       ...prev,
       { id: nextIdRef.current++, file: image.file, previewUrl: image.previewUrl },
@@ -213,9 +217,10 @@ function Home({ onNavigate }: HomeProps) {
                   <button
                     type='button'
                     onClick={handleUpload}
-                    className='clay-btn-accent px-5 py-2 text-sm'
+                    disabled={uploading}
+                    className='clay-btn-accent px-5 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60'
                   >
-                    Upload
+                    {uploading ? 'Uploading...' : 'Upload'}
                   </button>
                 </div>
               </div>

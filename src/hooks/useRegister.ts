@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import api from './api';
 
 export type RegisterPayload = {
@@ -15,7 +16,7 @@ export type UseRegisterResult = {
 };
 
 /**
- * Submits new-user details to POST /register and stores the returned
+ * Submits new-user details to POST /auth/register and stores the returned
  * token + user in localStorage. Returns { loading, error, register }.
  */
 export function useRegister(): UseRegisterResult {
@@ -37,14 +38,15 @@ export function useRegister(): UseRegisterResult {
         email,
         password,
       };
-      console.log('[register] POST', `${api.defaults.baseURL}/register`, payload);
+      console.log('[register] POST', `${api.defaults.baseURL}/auth/register`, payload);
 
-      const { data } = await api.post('/register', payload);
+      const { data } = await api.post('/auth/register', payload);
       console.log('[register] success response:', data);
 
       if (data?.token) localStorage.setItem('auth_token', data.token);
       if (data?.user) localStorage.setItem('auth_user', JSON.stringify(data.user));
 
+      toast.success('Registration successful!');
       return true;
     } catch (err: unknown) {
       console.error('[register] failed:', err);
@@ -67,6 +69,7 @@ export function useRegister(): UseRegisterResult {
             ? 'The server took too long to respond. Please try again.'
             : 'Unable to reach the server. It may be offline (CORS or network error).');
       setError(message);
+      toast.error(message);
       return false;
     } finally {
       setLoading(false);
