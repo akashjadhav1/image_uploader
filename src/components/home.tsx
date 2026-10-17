@@ -107,6 +107,12 @@ function Home({ onNavigate }: HomeProps) {
     setIsDragging(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    onNavigate?.('login');
+  };
+
   return (
     <div className='min-h-screen bg-[var(--clay-bg)] text-[var(--clay-text)] transition-colors'>
       {/* Top Navigation */}
@@ -145,7 +151,7 @@ function Home({ onNavigate }: HomeProps) {
 
           <button
             type='button'
-            onClick={() => onNavigate?.('login')}
+            onClick={handleLogout}
             className='clay-btn px-4 py-2 text-sm font-semibold text-[var(--clay-text-muted)] transition-colors hover:text-[var(--clay-danger)]'
           >
             Logout

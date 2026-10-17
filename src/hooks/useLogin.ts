@@ -27,10 +27,30 @@ export function useLogin(): UseLoginResult {
     setError('');
 
     try {
-      const { data } = await api.post('/auth/login', { email, password });
+      const res = await api.post('/api/auth/login', { email, password });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data: any = res?.data ?? {};
+      console.log('[login] response:', data);
 
-      if (data?.token) localStorage.setItem('auth_token', data.token);
-      if (data?.user) localStorage.setItem('auth_user', JSON.stringify(data.user));
+      // Support common response shapes so the token is always captured.
+      const token =
+        data.token ??
+        data.accessToken ??
+        data.jwt ??
+        data?.data?.token ??
+        data?.data?.accessToken ??
+        null;
+      const user = data.user ?? data?.data?.user ?? null;
+
+      if (!token) {
+        const message = 'Login succeeded but the server returned no token.';
+        setError(message);
+        toast.error(message);
+        return false;
+      }
+
+      localStorage.setItem('auth_token', token);
+      if (user) localStorage.setItem('auth_user', JSON.stringify(user));
 
       toast.success('Login successful!');
       return true;

@@ -10,7 +10,10 @@ type Page = 'login' | 'register' | 'home';
 
 function App() {
   // Simple state-based routing — no react-router-dom needed
-  const [page, setPage] = useState<Page>('login');
+  // Keep the user logged in across refreshes while a token is present.
+  const [page, setPage] = useState<Page>(() =>
+    localStorage.getItem('auth_token') ? 'home' : 'login'
+  );
 
   const handleNavigate = (target: 'login' | 'register' | 'home') => {
     setPage(target);

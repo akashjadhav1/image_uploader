@@ -40,11 +40,30 @@ export function useRegister(): UseRegisterResult {
       };
       console.log('[register] POST', `${api.defaults.baseURL}/auth/register`, payload);
 
-      const { data } = await api.post('/auth/register', payload);
+      const res = await api.post('/api/auth/register', payload);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data: any = res?.data ?? {};
       console.log('[register] success response:', data);
 
-      if (data?.token) localStorage.setItem('auth_token', data.token);
-      if (data?.user) localStorage.setItem('auth_user', JSON.stringify(data.user));
+      // Support common response shapes so the token is always captured.
+      const token =
+        data.token ??
+        data.accessToken ??
+        data.jwt ??
+        data?.data?.token ??
+        data?.data?.accessToken ??
+        null;
+      const user = data.user ?? data?.data?.user ?? null;
+
+      if (!token) {
+        const message = 'Registration succeeded but the server returned no token.';
+        setError(message);
+        toast.error(message);
+        return false;
+      }
+
+      localStorage.setItem('auth_token', token);
+      if (user) localStorage.setItem('auth_user', JSON.stringify(user));
 
       toast.success('Registration successful!');
       return true;
