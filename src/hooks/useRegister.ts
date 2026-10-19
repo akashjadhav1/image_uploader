@@ -16,7 +16,7 @@ export type UseRegisterResult = {
 };
 
 /**
- * Submits new-user details to POST /auth/register and stores the returned
+ * Submits new-user details to POST /api/auth/register and stores the returned
  * token + user in localStorage. Returns { loading, error, register }.
  */
 export function useRegister(): UseRegisterResult {
@@ -38,7 +38,7 @@ export function useRegister(): UseRegisterResult {
         email,
         password,
       };
-      console.log('[register] POST', `${api.defaults.baseURL}/auth/register`, payload);
+      console.log('[register] POST', `${api.defaults.baseURL}/api/auth/register`, payload);
 
       const res = await api.post('/api/auth/register', payload);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,7 +63,11 @@ export function useRegister(): UseRegisterResult {
       }
 
       localStorage.setItem('auth_token', token);
-      if (user) localStorage.setItem('auth_user', JSON.stringify(user));
+      // Always persist user details; fall back to the submitted name/email if the API omits user
+      localStorage.setItem(
+        'auth_user',
+        JSON.stringify(user ?? { username: fullName, email })
+      );
 
       toast.success('Registration successful!');
       return true;

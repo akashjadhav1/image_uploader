@@ -15,7 +15,7 @@ export type UseLoginResult = {
 };
 
 /**
- * Submits credentials to POST /auth/login and stores the returned token + user
+ * Submits credentials to POST /api/auth/login and stores the returned token + user
  * in localStorage. Returns { loading, error, login }.
  */
 export function useLogin(): UseLoginResult {
@@ -50,7 +50,11 @@ export function useLogin(): UseLoginResult {
       }
 
       localStorage.setItem('auth_token', token);
-      if (user) localStorage.setItem('auth_user', JSON.stringify(user));
+      // Always persist user details; fall back to the login email if the API omits user
+      localStorage.setItem(
+        'auth_user',
+        JSON.stringify(user ?? { email, username: email.split('@')[0] })
+      );
 
       toast.success('Login successful!');
       return true;

@@ -10,7 +10,7 @@ export type UseUploadResult = {
 };
 
 /**
- * Uploads a single image to POST /images using multipart/form-data.
+ * Uploads a single image to POST /api/images/upload using multipart/form-data.
  * The auth token is attached automatically by the shared api interceptor.
  * Returns { loading, error, upload }.
  */
@@ -26,7 +26,7 @@ export function useUpload(): UseUploadResult {
       const formData = new FormData();
       formData.append('image', file);
 
-      await api.post('api/images', formData, {
+      await api.post('/api/images/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
